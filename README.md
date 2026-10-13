@@ -15,4 +15,52 @@ Management needed a single view to answer:
 - UAE contributes the largest share of sales (about 42%), followed by KSA, Oman, Kuwait, and Qatar
 - Every category beat its 2026 target but declined year-on-year
 
-## Dashboard
+## Dashboard Features
+- **KPI cards:** YTD target, net sales, GP, achievement %, with colour-coded Y-o-Y arrows
+- **Region-wise sales mix:** donut chart (UAE, KSA, Oman, Kuwait, Qatar)
+- **Month-wise Y-o-Y comparison:** 2025 vs 2026 sales
+- **Month-wise target vs achievement:** 2026 net sales against target
+- **Category matrix:** target, sales, GP, achievement %, and Y-o-Y variance by H2 category
+- **Slicers:** Region, Store, H2 Desc, Category Manager, LFL Stores
+
+## Data Model
+Star schema with one fact table and two dimension tables:
+
+| Table | Type | Description |
+|---|---|---|
+| Sales | Fact | Date, Site, H2, Net Sales, Target Net Sales, GP Value, Target GP, Sales Qty |
+| Storecode | Dimension | Site, Site Name, Region, LFL Status |
+| Category Manager | Dimension | H2, H2 Desc, Category Managers |
+
+Relationships are one-to-many from each dimension to Sales.
+
+## Data Preparation (Power Query)
+- Promoted headers, removed top rows, and set data types
+- Merged the Sales table with the Storecode and Category Manager tables
+- Expanded and renamed columns (for example, LFL Status to LFL Stores)
+
+## DAX Highlights
+- **YTD calculations** using `CALCULATE`, `DATESBETWEEN`, and `EDATE` for dynamic 2025 and 2026 YTD periods
+- **Variance and achievement measures:** Y-o-Y variance, Y-o-Y %, YTD Ach %, GP Ach %
+- **Dynamic card formatting** using `SWITCH(TRUE())`, `FORMAT`, and `UNICHAR` to show up/down arrows with the variance %
+
+Example:
+
+```DAX
+YoY Sale Variance % = [YoY Variance] / [LY YTD Sale]
+```
+
+## Tools Used
+Power BI Desktop, DAX, Power Query, Data Modelling
+
+## Repository Contents
+- `Dashboard.pbix`: Power BI report file
+- `/screenshots`: dashboard and data model images
+- `DAX_Measures.xlsx`: list of all DAX measures
+
+## Note
+The data in this repository is sample/anonymised and does not represent real company figures.
+
+## Author
+**Mohd Sameer**: MIS Executive / Retail Data Analyst
+Power BI (PL-300 certified) | Advanced Excel | SQL | DAX
